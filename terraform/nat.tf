@@ -11,18 +11,14 @@ resource "azurerm_nat_gateway" "nat_gateway" {
   resource_group_name = azurerm_resource_group.aks.name
   location            = azurerm_resource_group.aks.location
   sku_name            = "Standard"
-
-  public_ip {
-    id = azurerm_public_ip.nat_ip.id
-  }
 }
 
 resource "azurerm_nat_gateway_public_ip_association" "nat_gw_association" {
   nat_gateway_id  = azurerm_nat_gateway.nat_gateway.id
-  public_ip_id    = azurerm_public_ip.nat_ip.id
+  public_ip_address_id    = azurerm_public_ip.nat_ip.id
 }
 
 resource "azurerm_subnet_nat_gateway_association" "nat_gw_subnet_association" {
-  subnet_id       = azurerm_subnet.subnet.id
+  subnet_id       = azurerm_subnet.private_subnet.id
   nat_gateway_id  = azurerm_nat_gateway.nat_gateway.id
 }

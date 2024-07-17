@@ -1,8 +1,3 @@
-resource "azurerm_resource_group" "aks" {
-  name     = "${var.name_prefix}-${var.environment}-rg"
-  location = var.location
-}
-
 resource "azurerm_public_ip" "external_ip" {
   name                = "${var.name_prefix}-${var.environment}-external-ip"
   resource_group_name = azurerm_resource_group.aks.name
@@ -23,16 +18,6 @@ resource "azurerm_subnet" "public_subnet" {
   resource_group_name  = azurerm_resource_group.aks.name
   virtual_network_name = azurerm_virtual_network.vpc_network.name
   address_prefixes     = ["10.0.1.0/24"]
-
-  delegation {
-    name = "aksSubnetDelegation"
-    service_delegation {
-      name = "Microsoft.ContainerService/managedClusters"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
-    }
-  }
-
-  service_endpoints = ["Microsoft.AzureActiveDirectory", "Microsoft.AzureCosmosDB"]
 }
 
 resource "azurerm_subnet" "private_subnet" {
@@ -40,14 +25,4 @@ resource "azurerm_subnet" "private_subnet" {
   resource_group_name  = azurerm_resource_group.aks.name
   virtual_network_name = azurerm_virtual_network.vpc_network.name
   address_prefixes     = ["10.0.2.0/24"]
-
-  delegation {
-    name = "aksPrivateSubnetDelegation"
-    service_delegation {
-      name = "Microsoft.ContainerService/managedClusters"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
-    }
-  }
-
-  service_endpoints = ["Microsoft.AzureActiveDirectory", "Microsoft.AzureCosmosDB"]
 }

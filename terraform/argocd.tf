@@ -18,5 +18,5 @@ resource "helm_release" "argocd" {
 
   values = [var.argocd_values]
 
-  depends_on = [google_container_cluster.primary]
+  depends_on = [azurerm_kubernetes_cluster.aks]
 }

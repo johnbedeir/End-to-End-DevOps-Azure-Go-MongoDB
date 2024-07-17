@@ -109,4 +109,6 @@ resource "helm_release" "kube_monitoring_stack" {
   version          = "60.3.0"
   create_namespace = true
   values           = [var.kube_monitoring_stack_values]
+
+  depends_on = [azurerm_kubernetes_cluster.aks]
 }
