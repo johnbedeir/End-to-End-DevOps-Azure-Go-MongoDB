@@ -15,13 +15,13 @@ jobs:
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v2
         with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          login-server: cluster1devacr.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build, tag, and push image to Azure Container Registry
         env:
-          ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+          ACR_LOGIN_SERVER: cluster1devacr.azurecr.io
           ACR_REPOSITORY: goapp
           IMAGE_TAG: latest
         run: |
