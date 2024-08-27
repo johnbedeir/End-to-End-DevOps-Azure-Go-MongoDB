@@ -1,0 +1,29 @@
+name: Continuous Integration
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.AZURE_CLIENT_ID }}
+          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+      - name: Build, tag, and push image to Azure Container Registry
+        env:
+          ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+          ACR_REPOSITORY: goapp
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ACR_LOGIN_SERVER/$ACR_REPOSITORY:$IMAGE_TAG ./Go-app/
+          docker push $ACR_LOGIN_SERVER/$ACR_REPOSITORY:$IMAGE_TAG
