@@ -2,5 +2,9 @@
 .terraform
 .terraform*
 *tfstate*
+<<<<<<< HEAD
 *.tfvars
 subscription.txt
+=======
+*.tfvars
+>>>>>>> 826312aec2d6fea4f05bbb72a6a29651b739fa80
