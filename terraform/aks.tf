@@ -1,5 +1,5 @@
 data "azuread_service_principal" "aks" {
-  application_id = azurerm_kubernetes_cluster.aks.kubelet_identity[0].client_id
+  client_id = azurerm_kubernetes_cluster.aks.kubelet_identity[0].client_id
 }
 
 resource "azurerm_role_assignment" "aks_contributor" {
@@ -22,7 +22,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name       = "default"
-    node_count = 1
+    node_count = 2
     vm_size    = "Standard_DS2_v2"
     vnet_subnet_id = azurerm_subnet.private_subnet.id
   }
@@ -36,7 +36,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_policy = "calico"
     service_cidr       = "10.3.0.0/16"
     dns_service_ip     = "10.3.0.10"
-    docker_bridge_cidr = "172.17.0.1/16"
   }
 }
 
@@ -61,22 +60,23 @@ resource "helm_release" "cluster_autoscaler" {
   name       = "cluster-autoscaler"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
-  version    = "9.36.0"
-  namespace  = "kube-system"
+  version    = "9.19.0"
+
+  namespace = "kube-system"
 
   set {
-    name  = "cloudProvider"
+    name  = "cloud-provider"
     value = "azure"
   }
 
   set {
-    name  = "rbac.create"
-    value = "true"
+    name  = "azure-client-id"
+    value = var.client_id
   }
-  
+
   set {
-    name  = "azureClientID"
-    value = data.azuread_service_principal.aks.object_id
+    name  = "azure-client-secret"
+    value = var.client_secret
   }
 
   set {
@@ -85,37 +85,28 @@ resource "helm_release" "cluster_autoscaler" {
   }
 
   set {
-    name  = "autoDiscovery.clusterName"
+    name  = "azure-vm-type"
+    value = "AKS"
+  }
+
+  set {
+    name  = "azure-subscription-id"
+    value = var.subscription_id
+  }
+
+  set {
+    name  = "azure-tenant-id"
+    value = var.tenant_id
+  }
+
+  set {
+    name  = "azure-cluster-name"
     value = azurerm_kubernetes_cluster.aks.name
   }
 
   set {
-    name  = "autoDiscovery.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "extraArgs.balance-similar-node-groups"
-    value = "true"
-  }
-
-  set {
-    name  = "extraArgs.skip-nodes-with-system-pods"
-    value = "false"
-  }
-
-  set {
-    name  = "extraArgs.scale-down-enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "extraArgs.scale-down-unneeded-time"
-    value = "5m"
-  }
-
-  set {
-    name  = "livenessProbe.initialDelaySeconds"
-    value = "60"
+    name  = "cloud-config"
+    value = "/etc/kubernetes/azure.json"
   }
 }
+

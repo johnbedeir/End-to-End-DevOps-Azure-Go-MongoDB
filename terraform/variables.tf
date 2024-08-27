@@ -3,16 +3,6 @@ variable "subscription_id" {
   type        = string
 }
 
-# variable "client_id" {
-#   description = "Azure Client ID"
-#   type        = string
-# }
-
-# variable "client_secret" {
-#   description = "Azure Client Secret"
-#   type        = string
-# }
-
 variable "tenant_id" {
   description = "Azure Tenant ID"
   type        = string
@@ -33,10 +23,14 @@ variable "environment" {
 variable "location" {
   description = "Azure region to deploy the resources"
   type        = string
-  default     = "Germany West Central"
 }
 
-# variable "db_username" {
-#   description = "The database username"
-#   type        = string
-# }
+variable "client_id" {
+  description = "The Azure Client Id"
+  type        = string
+}
+
+variable "client_secret" {
+  description = "The Azure Client Secret"
+  type        = string
+}
