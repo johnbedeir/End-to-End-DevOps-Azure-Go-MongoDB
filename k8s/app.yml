@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-app-deploy
+  name: goapp-deploy
   namespace: go-survey
   labels:
-    app: go-app
+    app: goapp
 spec:
   selector:
     matchLabels:
-      app: go-app
+      app: goapp
   replicas: 2
   template:
     metadata:
       labels:
-        app: go-app
+        app: goapp
     spec:
       containers:
-        - name: go-app
-          image: AWS_ID.dkr.ecr.REGION.amazonaws.com/REPO_NAME:latest # Make sure to update the image name to match the build.sh script 
+        - name: goapp
+          image: cluster1devacr.azurecr.io/goapp:latest # Make sure to update the image name to match the build.sh script 
           ports:
             - containerPort: 8080
           env:
@@ -30,36 +30,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: go-app
+  name: goapp
   namespace: go-survey
   labels:
-    app: go-app
+    app: goapp
 spec:
   selector:
-    app: go-app
-  type: ClusterIP
+    app: goapp
+  type: LoadBalancer
   ports:
-    - name: go-app
+    - name: goapp
       port: 8080
       targetPort: 8080
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: go-app-ingress
-  namespace: go-survey
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-spec:
-  rules:
-    - host: goapp.johnydev.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: go-app
-                port:
-                  number: 8080
