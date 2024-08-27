@@ -13,17 +13,19 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Login to Azure Container Registry
-        uses: azure/docker-login@v2
+        uses: elgohr/acr-login-action@master
         with:
-          login-server: cluster1devacr.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          service_principal: ${{ secrets.ACR_PRINCIPAL }}
+          service_principal_password: ${{ secrets.ACR_PRINCIPAL_PASSWORD }}
+          tenant: ${{ secrets.TENANT }}
+          registry: ${{ secrets.REGISTRY }}
+          repository: ${{ secrets.REPOSITORY }}
 
       - name: Build, tag, and push image to Azure Container Registry
         env:
-          ACR_LOGIN_SERVER: cluster1devacr.azurecr.io
-          ACR_REPOSITORY: goapp
-          IMAGE_TAG: latest
+          registry: ${{ secrets.REGISTRY }}
+          repository: ${{ secrets.REPOSITORY }}
+          image_tag: latest
         run: |
-          docker build -t $ACR_LOGIN_SERVER/$ACR_REPOSITORY:$IMAGE_TAG ./Go-app/
-          docker push $ACR_LOGIN_SERVER/$ACR_REPOSITORY:$IMAGE_TAG
+          docker build -t $registry/$repository:$image_tag ./Go-app/
+          docker push $registry/$repository:$image_tag
