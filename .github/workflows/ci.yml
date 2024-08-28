@@ -22,6 +22,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Run Azure CLI command
+        run: az account show
+
       - name: Azure CLI - Log in to ACR
         run: |
           az acr login --name ${{ env.REGISTRY_NAME }}
