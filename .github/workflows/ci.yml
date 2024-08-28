@@ -1,31 +1,39 @@
 name: Continuous Integration
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
+env:
+  REGISTRY_NAME: ${{ secrets.REGISTRY_NAME }}
+  REPO_NAME: ${{ secrets.REPO_NAME }}
 
 jobs:
-  build:
-    name: Build image
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Login to Azure Container Registry
-        uses: elgohr/acr-login-action@master
+      - name: Log in to Azure CLI
+        uses: azure/login@v1
         with:
-          service_principal: ${{ secrets.ACR_PRINCIPAL }}
-          service_principal_password: ${{ secrets.ACR_PRINCIPAL_PASSWORD }}
-          tenant: ${{ secrets.TENANT }}
-          registry: ${{ secrets.REGISTRY }}
-          repository: ${{ secrets.REPOSITORY }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Build, tag, and push image to Azure Container Registry
-        env:
-          registry: ${{ secrets.REGISTRY }}
-          repository: ${{ secrets.REPOSITORY }}
-          image_tag: latest
+      - name: Azure CLI - Log in to ACR
         run: |
-          docker build -t $registry/$repository:$image_tag ./Go-app/
-          docker push $registry/$repository:$image_tag
+          az acr login --name ${{ env.REGISTRY_NAME }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPO_NAME }}:${{ github.sha }} .
+
+      - name: Push Docker image to ACR
+        run: |
+          docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.REPO_NAME }}:${{ github.sha }}
+
+      - name: Logout from Docker
+        run: |
+          docker logout ${{ env.REGISTRY_NAME }}.azurecr.io
