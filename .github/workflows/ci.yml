@@ -17,6 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Debug Secrets (Remove after testing)
+        run: |
+          echo "Client ID: ${{ secrets.AZURE_CLIENT_ID }}"
+          echo "Client Secret: ${{ secrets.AZURE_CLIENT_SECRET }}"
+          echo "Tenant ID: ${{ secrets.AZURE_TENANT_ID }}"
+
       - name: Login to Azure using Service Principal
         run: |
           az login --service-principal \
