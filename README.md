@@ -55,8 +55,30 @@ The deployment process is automated using the `build.sh` script. The script perf
 
 ### Running the Script
 
-To deploy the entire setup, simply run the `build.sh` script:
+1. Deploy the entire setup, start by running:
+   ```
+   ./run_me_first.sh
+   ```
+   It will create a service principal app if it doesn't already exist, the output should look like this:
+   ```
+   Service principal does not exist. Creating a new one...
+   Client ID: xxxx-xxxx-xxxx-xxxx-xxxx
+   Client Secret: xxxxxxxxxxxxxxxx
+   Tenant ID: xxxx-xxxx-xxxx-xxxx-xxxx
+   ```
+2. Create `terraform.tfvars` inside `terraform` directory with the following values:
 
-```bash
-./build.sh
-```
+   ```
+     client_id="xxxx-xxxx-xxxx-xxxx-xxxx"
+     client_secret="xxxxxxxxxxxxxxxx"
+     subscription_id="xxxx-xxxx-xxxx-xxxx-xxxx"
+     tenant_id="xxxx-xxxx-xxxx-xxxx-xxxx"
+     location="Azure Region"
+   ```
+
+   You can find the `subscription_id` by navigating to the `Azure Portal` then `Subscription`
+
+3. Build the infrastructure and deploy using `build.sh` script:
+   ```bash
+   ./build.sh
+   ```
