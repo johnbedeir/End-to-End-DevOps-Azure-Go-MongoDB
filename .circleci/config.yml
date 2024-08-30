@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Build and Push Docker Image
           command: |
-            docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME:$CIRCLE_SHA1 .
+            docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME:$CIRCLE_SHA1 ./Go-app/
             docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:$CIRCLE_SHA1
 
       - run:
