@@ -1,0 +1,39 @@
+version: 2.1
+
+executors:
+  kubectl-executor:
+    docker:
+      - image: circleci/python:3.8
+    environment:
+      KUBECONFIG: /home/circleci/.kube/config
+
+jobs:
+  deploy:
+    executor: kubectl-executor
+    steps:
+      - checkout
+
+      - run:
+          name: Install kubectl
+          command: |
+            curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/
+
+
+      - run:
+          name: Decode kubeconfig
+          command: |
+            mkdir -p ~/.kube
+            echo "$KUBECONFIG_CONTENT" | base64 --decode > ~/.kube/config
+
+      - run:
+          name: Deploy to Kubernetes
+          command: |
+            kubectl apply -f k8s/
+
+workflows:
+  version: 2
+  deploy_workflow:
+    jobs:
+      - deploy
