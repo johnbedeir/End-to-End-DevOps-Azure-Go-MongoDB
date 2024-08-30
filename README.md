@@ -213,3 +213,75 @@ Once everything is set up:
 
 <img src=imgs/circleci-1.png>
 <img src=imgs/circleci-2.png>
+
+Here’s how you can update the `README.md` file to include the steps for adding a repository into ArgoCD and creating an application using the provided URL and credentials:
+
+---
+
+## Setting Up Continuous Deployment with ArgoCD
+
+This section will guide you through the process of integrating your GitHub repository with ArgoCD to automate the deployment of your application to a Kubernetes cluster.
+
+### 1. Access ArgoCD
+
+Once ArgoCD has been deployed using Helm with Terraform, you can access the ArgoCD web UI directly using the following URL and credentials:
+
+- **ArgoCD URL**: `ARGO-CD URL`
+- **Username**: `admin`
+- **Password**: `ARGO-CD PASSWORD`
+
+### 2. Log in to ArgoCD
+
+1. Open your web browser and navigate to the ArgoCD URL provided: [http://98.67.219.216](http://98.67.219.216).
+2. Log in using the provided credentials:
+   - **Username**: `admin`
+   - **Password**: `ARGO-CD PASSWORD`
+
+### 3. Add Your GitHub Repository to ArgoCD
+
+1. **Navigate to Repositories**:
+
+   - Once logged in, click on **Settings** in the left sidebar, and then click on **Repositories**.
+
+2. **Add a New Repository**:
+   - Click on the **Connect Repo using HTTPS/SSH** button.
+   - **Repository URL**: Enter the URL of your GitHub repository, for example: `https://github.com/your-username/your-repository`.
+   - **Type**: Choose the repository type (`Public` or `Private`). If private, you may need to provide SSH credentials or an access token.
+   - **Name**: Optionally, give the repository a name.
+   - Click **Connect** to add the repository to ArgoCD.
+
+### 4. Create a New Application in ArgoCD
+
+1. **Navigate to Applications**:
+
+   - After adding your repository, go to the **Applications** section from the left sidebar.
+
+2. **Create a New Application**:
+
+   - Click the **New App** button.
+
+3. **Application Configuration**:
+
+   - **Application Name**: Provide a name for your application, e.g., `my-app`.
+   - **Project**: Select `default` unless you've set up a custom project.
+   - **Sync Policy**: Set to manual or automatic depending on your needs.
+   - **Repository URL**: Choose the repository you added earlier.
+   - **Path**: Specify the path to the directory where your Kubernetes manifests or Helm chart are located, e.g., `k8s/`.
+   - **Cluster**: Choose the cluster where you want to deploy the application (usually the in-cluster Kubernetes context).
+   - **Namespace**: Enter the Kubernetes namespace where the application should be deployed, e.g., `default`.
+
+4. **Sync Options**:
+
+   - You can enable auto-sync to automatically deploy changes from the repository to the cluster.
+   - Optionally, enable self-heal and prune resources.
+
+5. **Create the Application**:
+   - Once all the fields are configured, click **Create** to create the application.
+
+### 5. Sync and Deploy the Application
+
+1. After the application is created, you will be redirected to the application dashboard.
+2. If you've set up auto-sync, ArgoCD will automatically deploy the application based on the configurations in the repository.
+3. If manual sync is enabled:
+   - Click on the **Sync** button to manually trigger the deployment.
+   - Monitor the sync status and logs to ensure the application is deployed correctly.
