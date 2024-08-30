@@ -210,3 +210,6 @@ Once everything is set up:
 1. Push any changes to your GitHub repository.
 2. CircleCI will automatically detect the push and start running the CI/CD pipeline as defined in your `.circleci/config.yml`.
 3. You can monitor the progress and results of your builds and deployments directly in the CircleCI dashboard.
+
+<img src=imgs/circleci-1.png>
+<img src=imgs/circleci-2.png>
