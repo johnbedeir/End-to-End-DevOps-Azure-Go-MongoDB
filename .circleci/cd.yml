@@ -39,7 +39,7 @@ jobs:
 
 workflows:
   version: 2
-  deploy_workflow:
+  cd_workflow:
     jobs:
       - deploy:
           requires:
