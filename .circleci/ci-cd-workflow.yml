@@ -69,7 +69,7 @@ jobs:
       - run:
           name: Update Kubernetes manifest with the correct image tag
           command: |
-            IMAGE_TAG=$(cat /workspace/image_tag.txt)
+            IMAGE_TAG=$(cat image_tag.txt)
             sed -i "s/latest/$IMAGE_TAG/g" k8s/app.yml
 
       - run:
