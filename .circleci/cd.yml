@@ -20,6 +20,11 @@ jobs:
             chmod +x kubectl
             sudo mv kubectl /usr/local/bin/
 
+      - run:
+          name: Update Kubernetes manifest with the correct image tag
+          command: |
+            IMAGE_TAG=$(cat /workspace/image_tag.txt)
+            sed -i "s/latest/$IMAGE_TAG/g" k8s/app.yml
 
       - run:
           name: Decode kubeconfig
@@ -36,4 +41,6 @@ workflows:
   version: 2
   deploy_workflow:
     jobs:
-      - deploy
+      - deploy:
+          requires:
+            - build-and-push

@@ -33,6 +33,16 @@ jobs:
             docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:$CIRCLE_SHA1
 
       - run:
+          name: Save the image tag
+          command: |
+            echo $CIRCLE_SHA1 > image_tag.txt
+            
+      - persist_to_workspace:
+          root: .
+          paths:
+            - image_tag.txt
+
+      - run:
           name: Logout from ACR
           command: |
             docker logout $ACR_NAME.azurecr.io
