@@ -152,3 +152,64 @@ persistentvolumeclaim/mongo-pvc created
 │ admin         │ admin                   │
 └───────────────┴─────────────────────────┘
 ```
+
+## Setting Up the CI/CD Pipeline with CircleCI
+
+This guide will walk you through the steps to set up Continuous Integration and Continuous Deployment (CI/CD) for this project using CircleCI.
+
+### 1. Create an Account on CircleCI
+
+1. Visit [CircleCI](https://circleci.com/) and sign up using your GitHub account.
+2. Once signed in, you will be prompted to authorize CircleCI to access your GitHub repositories. Grant the necessary permissions to allow CircleCI to integrate with your projects.
+
+### 2. Connect CircleCI to Your GitHub Repository and Create Pipelines
+
+1. After logging in to CircleCI, go to the **Projects** page and find the repository you want to connect.
+2. Click on **Set Up Project**.
+3. CircleCI will automatically detect the `.circleci/config.yml` file in your repository.
+4. To create a pipeline:
+   - Navigate to the **Pipelines** section from your project’s settings.
+   - Click on **Add Pipeline**.
+   - Give the pipeline a name (e.g., "CI/CD Pipeline (dev)" or "CI/CD Pipeline (main)").
+   - Select the GitHub App as the **Config Source**.
+   - Choose the branch you want this pipeline to track (e.g., `dev`, `main`).
+   - Click **Save** to create the pipeline.
+5. Repeat the process for any other branches you wish to set up pipelines for.
+
+### 3. Setting Up Triggers for Your Pipelines
+
+1. After creating the pipelines, navigate to the **Triggers** section in your project’s settings.
+2. Click on **Add Trigger** to create a new trigger.
+3. Name the trigger appropriately (e.g., "Trigger CI/CD (dev)" or "Trigger CI/CD (main)").
+4. Select the pipeline that corresponds to this trigger (e.g., choose the "CI/CD Pipeline (dev)" for the `dev` branch).
+5. Define the conditions for the trigger, such as triggering on push events or pull requests.
+6. Click **Save** to create the trigger.
+7. Repeat the process for other branches if necessary.
+
+### 4. Setting Up Environment Variables
+
+To securely pass sensitive information like Azure credentials and Kubernetes configuration to CircleCI, follow these steps:
+
+1. Navigate to your project's **Settings** in CircleCI.
+2. Go to the **Environment Variables** section under **Build Settings**.
+3. Add the following environment variables with the corresponding values:
+
+   - **`AZURE_CLIENT_ID`**: The client ID of your Azure service principal.
+   - **`AZURE_CLIENT_SECRET`**: The client secret of your Azure service principal.
+   - **`AZURE_TENANT_ID`**: The tenant ID associated with your Azure service principal.
+   - **`ACR_NAME`**: The name of your Azure Container Registry.
+   - **`IMAGE_NAME`**: The name you want to give your Docker image.
+   - **`KUBECONFIG_CONTENT`**: Base64-encoded content of your Kubernetes `kubeconfig` file.
+
+4. Make sure each variable is correctly configured and matches the values required for your project.
+
+### 5. Push Changes to Trigger the Pipeline
+
+Once everything is set up:
+
+1. Push any changes to your GitHub repository.
+2. CircleCI will automatically detect the push and start running the CI/CD pipeline as defined in your `.circleci/config.yml`.
+3. You can monitor the progress and results of your builds and deployments directly in the CircleCI dashboard.
+
+<img src=imgs/circleci-1.png>
+<img src=imgs/circleci-2.png>
