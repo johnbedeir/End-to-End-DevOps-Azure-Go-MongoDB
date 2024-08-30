@@ -60,7 +60,7 @@ jobs:
       - checkout
 
       - attach_workspace:
-          at: /workspace
+          at: /home/circleci/project
       
       - run:
           name: Install kubectl
