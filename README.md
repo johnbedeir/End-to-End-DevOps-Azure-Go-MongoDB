@@ -56,16 +56,24 @@ The deployment process is automated using the `build.sh` script. The script perf
 ### Running the Script
 
 1. Deploy the entire setup, start by running:
+
+   First step, you need to create a file called `subscription.txt` in the root directory, that contains the **Subscription-ID** of your Azure account, just paste the id in the file, then run the `run_me_first.sh` script.
+
    ```
    ./run_me_first.sh
    ```
-   It will create a service principal app if it doesn't already exist, the output should look like this:
+
+   This script will create a service principal app if it doesn't already exist, the output should look like this:
+
+   `IMPORTANT: Make sure to save the output, you won't be able to get the Client Secret again`
+
    ```
    Service principal does not exist. Creating a new one...
    Client ID: xxxx-xxxx-xxxx-xxxx-xxxx
    Client Secret: xxxxxxxxxxxxxxxx
    Tenant ID: xxxx-xxxx-xxxx-xxxx-xxxx
    ```
+
 2. Create `terraform.tfvars` inside `terraform` directory with the following values:
 
    ```
@@ -82,3 +90,65 @@ The deployment process is automated using the `build.sh` script. The script perf
    ```bash
    ./build.sh
    ```
+
+## Accessing the Application
+
+After the build script is executed, you should see the following:
+
+### Infrastructure output:
+
+```
+Apply complete! Resources: 18 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+acr_name = "cluster1devacr"
+aks_cluster_location = "azure location"
+aks_cluster_name = "cluster-1-dev-aks"
+client_id = "xxxxxx-xxxxxx-xxxxxx-xxxxxx-xxxxxx"
+kube_config = <sensitive>
+principal_id = "xxxxxx-xxxxxx-xxxxxx-xxxxxx-xxxxxx"
+tenant_id = "xxxxxx-xxxxxx-xxxxxx-xxxxxx-xxxxxx"
+```
+
+### Application Deployment
+
+```
+--------------------Deploying App--------------------
+deployment.apps/goapp-deploy created
+service/goapp created
+deployment.apps/db-deploy created
+service/mongo-app-service created
+persistentvolumeclaim/mongo-pvc created
+```
+
+### Retrieving Application URLs
+
+```
+----------------------Application URL-----------------------
+98.67.222.117:8080
+
+------------------------ArgoCD URL--------------------------
+98.67.219.216
+-------------------- ArgoCD Credentials---------------------
+┌─────────┬───────────────────────────┐
+│  USER   │  PASSWORD                 │
+├─────────┼───────────────────────────┤
+│  admin  │ XXXXAXXXXTXXXpCt          │
+└─────────┴───────────────────────────┘
+
+----------------------Alertmanager URL----------------------
+98.67.218.6:9093
+
+-----------------------Prometheus URL-----------------------
+98.67.219.209:9090
+
+------------------------ Grafana URL------------------------
+98.67.218.10
+-------------------- Grafana Credentials--------------------
+┌───────────────┬─────────────────────────┐
+│  USER         │  PASSWORD               │
+├───────────────┼─────────────────────────┤
+│ admin         │ admin                   │
+└───────────────┴─────────────────────────┘
+```
