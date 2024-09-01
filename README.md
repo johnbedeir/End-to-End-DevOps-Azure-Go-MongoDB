@@ -214,8 +214,6 @@ Once everything is set up:
 <img src=imgs/circleci-1.png>
 <img src=imgs/circleci-2.png>
 
-Here’s how you can update the `README.md` file to include the steps for adding a repository into ArgoCD and creating an application using the provided URL and credentials:
-
 ---
 
 ## Setting Up Continuous Deployment with ArgoCD
