@@ -201,6 +201,10 @@ To securely pass sensitive information like Azure credentials and Kubernetes con
    - **`IMAGE_NAME`**: The name you want to give your Docker image.
    - **`KUBECONFIG_CONTENT`**: Base64-encoded content of your Kubernetes `kubeconfig` file.
 
+   ```
+   base64 -w 0 .kube/config > file.txt
+   ```
+
 4. Make sure each variable is correctly configured and matches the values required for your project.
 
 ### 5. Push Changes to Trigger the Pipeline
