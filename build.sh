@@ -3,7 +3,7 @@
 # Variables
 subscription_id=$(cat subscription.txt)
 cluster_name="cluster-1-dev-aks" # Update this if the cluster name is changed in terraform
-Location="Germany West Central"
+Location="East US"
 resource_group="cluster-1-dev-rg"
 acr_name="cluster1devacr"
 service_principal_name="goapp"
